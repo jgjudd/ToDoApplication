@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useReducer } from 'react';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import styled from 'styled-components'
+
+import { AppContext, AppReducer, initialAppState } from './Context/AppContext'
+
+import Dashboard from './components/Dashboard/Dashboard'
+import Header from './components/Header/Header'
+// import Footer from './components/Footer/Footer'
+import Project from './components/Project/Project'
+
+const Container = styled.div`
+  width: 75%;
+  margin: auto;
+`
 
 function App() {
+  const [appState, appDispatch] = useReducer(AppReducer, initialAppState)
+  const value = { appState, appDispatch }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <AppContext.Provider value={value}>
+      <BrowserRouter>
+        <Header />
+        <Container>
+            <Switch>
+              <Route 
+                exact 
+                path='/'
+                component={Dashboard}
+              />
+              <Route 
+                exact 
+                path='/project/:id'
+                component={Project}  
+              />
+            </Switch>
+        </Container>
+      </BrowserRouter>
+      </AppContext.Provider>
+    </React.Fragment>  
   );
 }
 
